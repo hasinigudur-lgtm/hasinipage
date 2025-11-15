@@ -1,0 +1,631 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>FLAMES Love Calculator - Advanced Animation</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;600;700&family=Dancing+Script:wght@700&display=swap');
+
+        :root {
+            --primary: #ff3366;
+            --secondary: #ff6b9d;
+            --accent: #ff8c00;
+            --dark: #1a1a2e;
+            --light: #f8f9fa;
+            --gradient: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            --flame-gradient: linear-gradient(45deg, #ff512f, #dd2476, #ff8c00, #f5d300);
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Poppins', sans-serif;
+            background: var(--dark);
+            color: var(--light);
+            overflow-x: hidden;
+            min-height: 100vh;
+            background-image: 
+                radial-gradient(circle at 20% 80%, rgba(120, 119, 198, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 80% 20%, rgba(255, 51, 102, 0.3) 0%, transparent 50%),
+                radial-gradient(circle at 40% 40%, rgba(120, 119, 198, 0.2) 0%, transparent 50%);
+            background-attachment: fixed;
+        }
+
+        .container {
+            max-width: 900px;
+            margin: 0 auto;
+            padding: 20px;
+            position: relative;
+            z-index: 10;
+        }
+
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 40px 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .title {
+            font-family: 'Dancing Script', cursive;
+            font-size: 4.5rem;
+            background: var(--flame-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 10px;
+            animation: titleGlow 3s ease-in-out infinite alternate;
+            text-shadow: 0 0 30px rgba(255, 51, 102, 0.5);
+        }
+
+        @keyframes titleGlow {
+            0% { text-shadow: 0 0 20px rgba(255, 51, 102, 0.5); }
+            100% { text-shadow: 0 0 40px rgba(255, 107, 157, 0.8), 0 0 60px rgba(255, 140, 0, 0.6); }
+        }
+
+        .subtitle {
+            font-size: 1.2rem;
+            color: #ccc;
+            max-width: 700px;
+            margin: 0 auto;
+            line-height: 1.6;
+            opacity: 0;
+            animation: fadeInUp 1s ease forwards 0.5s;
+        }
+
+        .flames-form {
+            background: rgba(255, 255, 255, 0.08);
+            backdrop-filter: blur(15px);
+            border-radius: 25px;
+            padding: 40px;
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.3);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            margin-bottom: 40px;
+            position: relative;
+            overflow: hidden;
+            transform: translateY(50px);
+            opacity: 0;
+            animation: slideInUp 1s ease forwards 0.8s;
+        }
+
+        .flames-form::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: var(--flame-gradient);
+            opacity: 0.1;
+            animation: rotate 20s linear infinite;
+            z-index: -1;
+        }
+
+        @keyframes rotate {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+
+        .input-group {
+            margin-bottom: 25px;
+            position: relative;
+        }
+
+        .input-group label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 600;
+            color: var(--secondary);
+            font-size: 1.1rem;
+        }
+
+        .input-field {
+            width: 100%;
+            padding: 15px 20px;
+            border: 2px solid rgba(255, 51, 102, 0.3);
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.1);
+            color: white;
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+            backdrop-filter: blur(5px);
+        }
+
+        .input-field:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 20px rgba(255, 51, 102, 0.4);
+            transform: scale(1.02);
+        }
+
+        .input-field::placeholder {
+            color: rgba(255, 255, 255, 0.5);
+        }
+
+        .btn-calculate {
+            background: var(--flame-gradient);
+            color: white;
+            border: none;
+            padding: 16px 40px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            border-radius: 50px;
+            cursor: pointer;
+            display: block;
+            margin: 30px auto 0;
+            position: relative;
+            overflow: hidden;
+            transition: all 0.3s ease;
+            box-shadow: 0 10px 30px rgba(255, 51, 102, 0.4);
+        }
+
+        .btn-calculate:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 15px 35px rgba(255, 51, 102, 0.6);
+        }
+
+        .btn-calculate::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: -100%;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(90deg, transparent, rgba(255, 255, 255, 0.3), transparent);
+            transition: 0.5s;
+        }
+
+        .btn-calculate:hover::before {
+            left: 100%;
+        }
+
+        .result-container {
+            margin-top: 40px;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.08);
+            border-radius: 20px;
+            backdrop-filter: blur(15px);
+            text-align: center;
+            display: none;
+            transform: scale(0.8);
+            opacity: 0;
+            transition: all 0.6s ease;
+        }
+
+        .result-container.show {
+            display: block;
+            transform: scale(1);
+            opacity: 1;
+        }
+
+        .result-letter {
+            font-size: 6rem;
+            font-weight: 700;
+            background: var(--flame-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+            margin-bottom: 20px;
+            animation: pulse 2s infinite;
+        }
+
+        @keyframes pulse {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        .result-meaning {
+            font-size: 2rem;
+            margin-bottom: 15px;
+            color: var(--secondary);
+        }
+
+        .result-description {
+            font-size: 1.1rem;
+            line-height: 1.7;
+            color: #ddd;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+
+        .flames-legend {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(120px, 1fr));
+            gap: 15px;
+            margin: 50px 0;
+            padding: 30px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+        }
+
+        .flame-item {
+            text-align: center;
+            padding: 15px;
+            border-radius: 15px;
+            background: rgba(255, 255, 255, 0.08);
+            transition: all 0.3s ease;
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .flame-item:hover {
+            transform: translateY(-10px);
+            box-shadow: 0 15px 30px rgba(255, 51, 102, 0.3);
+        }
+
+        .flame-letter {
+            font-size: 2rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 5px;
+        }
+
+        .flame-meaning {
+            font-size: 0.9rem;
+            color: #ccc;
+        }
+
+        .particles {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            pointer-events: none;
+            z-index: 1;
+        }
+
+        .particle {
+            position: absolute;
+            width: 4px;
+            height: 4px;
+            background: var(--primary);
+            border-radius: 50%;
+            animation: float 6s infinite linear;
+            opacity: 0;
+        }
+
+        @keyframes float {
+            0% {
+                transform: translateY(100vh) translateX(0);
+                opacity: 0;
+            }
+            10% {
+                opacity: 1;
+            }
+            90% {
+                opacity: 1;
+            }
+            100% {
+                transform: translateY(-100px) translateX(100px);
+                opacity: 0;
+            }
+        }
+
+        .flame-animation {
+            position: absolute;
+            bottom: -50px;
+            left: 50%;
+            transform: translateX(-50%);
+            width: 200px;
+            height: 200px;
+            pointer-events: none;
+            opacity: 0;
+            transition: opacity 0.5s;
+        }
+
+        .flame-animation.active {
+            opacity: 1;
+        }
+
+        .info-section {
+            margin-top: 60px;
+            padding: 40px;
+            background: rgba(255, 255, 255, 0.05);
+            border-radius: 20px;
+            backdrop-filter: blur(10px);
+            line-height: 1.8;
+            color: #ddd;
+        }
+
+        .info-section h3 {
+            color: var(--secondary);
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+        }
+
+        @keyframes fadeInUp {
+            from {
+                opacity: 0;
+                transform: translateY(30px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        @keyframes slideInUp {
+            from {
+                opacity: 0;
+                transform: translateY(50px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+
+        .heart-beat {
+            animation: heartbeat 1.5s ease-in-out infinite;
+        }
+
+        @keyframes heartbeat {
+            0%, 100% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+        }
+
+        @media (max-width: 768px) {
+            .title {
+                font-size: 3rem;
+            }
+            .flames-form {
+                padding: 25px;
+            }
+            .result-letter {
+                font-size: 4rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="particles" id="particles"></div>
+    
+    <div class="container">
+        <header>
+            <h1 class="title">FLAMES Calculator</h1>
+            <p class="subtitle">
+                This flames calculator assesses and predicts the outcome of a relationship based on an algorithm of two given names. 
+                You can find more in-depth information on this subject below the form.
+            </p>
+        </header>
+
+        <div class="flames-form">
+            <div class="input-group">
+                <label for="name1">Your Name</label>
+                <input type="text" id="name1" class="input-field" placeholder="Enter first name" autocomplete="off">
+            </div>
+            
+            <div class="input-group">
+                <label for="name2">Partner's Name</label>
+                <input type="text" id="name2" class="input-field" placeholder="Enter second name" autocomplete="off">
+            </div>
+            
+            <button class="btn-calculate" onclick="calculateFLAMES()">
+                Calculate Relationship <span class="heart-beat">❤️</span>
+            </button>
+        </div>
+
+        <div class="result-container" id="resultContainer">
+            <div class="result-letter" id="resultLetter"></div>
+            <h2 class="result-meaning" id="resultMeaning"></h2>
+            <p class="result-description" id="resultDescription"></p>
+        </div>
+
+        <div class="flames-legend">
+            <div class="flame-item" onclick="showMeaning('F', 'Friendship')">
+                <div class="flame-letter">F</div>
+                <div class="flame-meaning">Friendship</div>
+            </div>
+            <div class="flame-item" onclick="showMeaning('L', 'Love')">
+                <div class="flame-letter">L</div>
+                <div class="flame-meaning">Love</div>
+            </div>
+            <div class="flame-item" onclick="showMeaning('A', 'Affection')">
+                <div class="flame-letter">A</div>
+                <div class="flame-meaning">Affection</div>
+            </div>
+            <div class="flame-item" onclick="showMeaning('M', 'Marriage')">
+                <div class="flame-letter">M</div>
+                <div class="flame-meaning">Marriage</div>
+            </div>
+            <div class="flame-item" onclick="showMeaning('E', 'Enemy')">
+                <div class="flame-letter">E</div>
+                <div class="flame-meaning">Enemy</div>
+            </div>
+            <div class="flame-item" onclick="showMeaning('S', 'Siblings')">
+                <div class="flame-letter">S</div>
+                <div class="flame-meaning">Siblings</div>
+            </div>
+        </div>
+
+        <div class="info-section">
+            <h3>About FLAMES</h3>
+            <p>
+                It is always hard to define the relationship between two people in a simple word like friendship, love, affection and enemy or to predict the outcome, like marriage.
+            </p>
+            <p>
+                The above tool tries to find the answer to questions like "what is our relationship?" or to give you a sense of what is going on between you and another person. You are only asked to enter the two names between which you want to calculate the relationship.
+            </p>
+            <p>
+                The FLAMES test is actually a compatibility analysis that reveals to what extent the relationship between two persons can go, defining that into 6 simple words.
+            </p>
+            <p>
+                You can use it as a love meter to see whether you and your crush have any chance to get serious or simply to see what future holds between you and the person you just met. This is just another fun name game that most pre-teens and teens have tried.
+            </p>
+        </div>
+    </div>
+
+    <div class="flame-animation" id="flameAnimation">
+        <svg width="200" height="200" viewBox="0 0 200 200">
+            <defs>
+                <linearGradient id="flameGrad" x1="0%" y1="100%" x2="0%" y2="0%">
+                    <stop offset="0%" style="stop-color:#ff512f;stop-opacity:1" />
+                    <stop offset="50%" style="stop-color:#dd2476;stop-opacity:1" />
+                    <stop offset="100%" style="stop-color:#ff8c00;stop-opacity:1" />
+                </linearGradient>
+            </defs>
+            <path d="M100,180 C80,140 70,100 100,50 C130,100 120,140 100,180 
+                     M80,160 C70,130 65,100 85,70 
+                     M120,160 C130,130 135,100 115,70" 
+                  fill="url(#flameGrad)" opacity="0.8">
+                <animate attributeName="opacity" values="0.8;1;0.8" dur="1.5s" repeatCount="indefinite"/>
+                <animateTransform attributeName="transform" type="scale" values="1;1.2;1" dur="1.5s" repeatCount="indefinite"/>
+            </path>
+        </svg>
+    </div>
+
+    <script>
+        // Create floating particles
+        function createParticles() {
+            const particlesContainer = document.getElementById('particles');
+            const particleCount = 50;
+
+            for (let i = 0; i < particleCount; i++) {
+                const particle = document.createElement('div');
+                particle.classList.add('particle');
+                
+                const size = Math.random() * 4 + 2;
+                particle.style.width = size + 'px';
+                particle.style.height = size + 'px';
+                
+                particle.style.left = Math.random() * 100 + '%';
+                particle.style.animationDelay = Math.random() * 6 + 's';
+                particle.style.animationDuration = (Math.random() * 4 + 4) + 's';
+                
+                const hue = Math.random() * 60 + 10; // Orange to red
+                particle.style.background = `hsl(${hue}, 100%, 65%)`;
+                
+                particlesContainer.appendChild(particle);
+            }
+        }
+
+        // FLAMES meanings
+        const flamesMeanings = {
+            'F': {
+                meaning: 'Friendship',
+                description: 'You share a beautiful friendship! A strong foundation of trust, understanding, and mutual respect. This relationship can last a lifetime.'
+            },
+            'L': {
+                meaning: 'Love',
+                description: 'True Love! ❤️ The stars have aligned for you both. This is a deep, passionate connection that could lead to something extraordinary.'
+            },
+            'A': {
+                meaning: 'Affection',
+                description: 'Sweet Affection! There\'s warmth and care between you. This relationship has the potential to blossom into something beautiful.'
+            },
+            'M': {
+                meaning: 'Marriage',
+                description: 'Destined for Marriage! 💍 The universe sees a future together. This connection has all the ingredients for a lasting partnership.'
+            },
+            'E': {
+                meaning: 'Enemy',
+                description: 'Better as Enemies! Sometimes people are just not meant to be close. It\'s okay - not everyone is meant to get along.'
+            },
+            'S': {
+                meaning: 'Siblings',
+                description: 'Like Siblings! 👫 You share a bond similar to brother and sister. Protective, caring, and always there for each other.'
+            }
+        };
+
+        // Calculate FLAMES
+        function calculateFLAMES() {
+            const name1 = document.getElementById('name1').value.trim().toLowerCase().replace(/\s+/g, '');
+            const name2 = document.getElementById('name2').value.trim().toLowerCase().replace(/\s+/g, '');
+            
+            if (!name1 || !name2) {
+                alert('Please enter both names!');
+                return;
+            }
+            
+            if (name1 === name2) {
+                alert('Please enter two different names!');
+                return;
+            }
+
+            // Count common letters
+            let commonCount = 0;
+            const name1Arr = name1.split('');
+            const name2Arr = name2.split('');
+            
+            for (let i = 0; i < name1Arr.length; i++) {
+                const index = name2Arr.indexOf(name1Arr[i]);
+                if (index !== -1) {
+                    commonCount++;
+                    name2Arr[index] = ''; // Remove matched letter
+                }
+            }
+            
+            const remainingLetters = name1.length + name2.length - 2 * commonCount;
+            
+            // FLAMES algorithm
+            const flames = ['F', 'L', 'A', 'M', 'E', 'S'];
+            let index = 0;
+            
+            while (flames.length > 1) {
+                index = (index + remainingLetters - 1) % flames.length;
+                flames.splice(index, 1);
+            }
+            
+            const result = flames[0];
+            showResult(result);
+        }
+
+        // Show result with animation
+        function showResult(letter) {
+            const resultContainer = document.getElementById('resultContainer');
+            const resultLetter = document.getElementById('resultLetter');
+            const resultMeaning = document.getElementById('resultMeaning');
+            const resultDescription = document.getElementById('resultDescription');
+            const flameAnimation = document.getElementById('flameAnimation');
+            
+            const meaning = flamesMeanings[letter];
+            
+            resultLetter.textContent = letter;
+            resultMeaning.textContent = meaning.meaning;
+            resultDescription.textContent = meaning.description;
+            
+            resultContainer.classList.add('show');
+            flameAnimation.classList.add('active');
+            
+            // Trigger flame animation
+            setTimeout(() => {
+                flameAnimation.classList.remove('active');
+            }, 3000);
+        }
+
+        // Show meaning on legend click
+        function showMeaning(letter, meaning) {
+            document.getElementById('resultLetter').textContent = letter;
+            document.getElementById('resultMeaning').textContent = meaning;
+            document.getElementById('resultDescription').textContent = flamesMeanings[letter].description;
+            document.getElementById('resultContainer').classList.add('show');
+        }
+
+        // Initialize particles on load
+        window.onload = function() {
+            createParticles();
+            
+            // Add input animation
+            const inputs = document.querySelectorAll('.input-field');
+            inputs.forEach(input => {
+                input.addEventListener('focus', function() {
+                    this.parentElement.style.transform = 'scale(1.02)';
+                });
+                
+                input.addEventListener('blur', function() {
+                    this.parentElement.style.transform = 'scale(1)';
+                });
+            });
+        };
+    </script>
+</body>
+</html>
