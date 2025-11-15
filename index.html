@@ -396,6 +396,9 @@
                 This flames calculator assesses and predicts the outcome of a relationship based on an algorithm of two given names. 
                 You can find more in-depth information on this subject below the form.
             </p>
+
+            <!-- ⭐ VIEWER COUNTER ADDED HERE ⭐ -->
+            <div id="count" style="margin-top:15px; font-size:1.2rem; color:#ff6b9d;"></div>
         </header>
 
         <div class="flames-form">
@@ -602,7 +605,7 @@
             }, 3000);
         }
 
-        // Show meaning on legend click
+        // Show legend meaning
         function showMeaning(letter, meaning) {
             document.getElementById('resultLetter').textContent = letter;
             document.getElementById('resultMeaning').textContent = meaning;
@@ -610,22 +613,20 @@
             document.getElementById('resultContainer').classList.add('show');
         }
 
-        // Initialize particles on load
+        // Initialize particles
         window.onload = function() {
             createParticles();
-            
-            // Add input animation
-            const inputs = document.querySelectorAll('.input-field');
-            inputs.forEach(input => {
-                input.addEventListener('focus', function() {
-                    this.parentElement.style.transform = 'scale(1.02)';
-                });
-                
-                input.addEventListener('blur', function() {
-                    this.parentElement.style.transform = 'scale(1)';
-                });
-            });
         };
     </script>
+
+    <!-- ⭐ VIEWER COUNTER SCRIPT ADDED HERE ⭐ -->
+    <script>
+        fetch('https://api.countapi.xyz/hit/mywebsite/flames')
+          .then(res => res.json())
+          .then(data => {
+              document.getElementById('count').innerHTML = "Total Views: " + data.value;
+          });
+    </script>
+
 </body>
 </html>
